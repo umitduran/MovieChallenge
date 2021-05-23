@@ -1,8 +1,8 @@
 import React, {useEffect, useContext, useState} from 'react';
-import apiCall from '../../utils/api';
 import {Context} from '../../context/Store';
-import Card from '../../components/Card';
 import {SafeAreaView, FlatList} from 'react-native';
+import apiCall from '../../utils/api';
+import Card from '../../components/Card';
 import styles from '../MoviesList/MoviesList.style';
 import Loading from '../../components/Loading';
 import SearchBar from '../../components/SearchBar';
@@ -22,6 +22,7 @@ const MovieListScene = ({navigation}) => {
     });
 
     const {results} = popularMovies.data;
+
     if (results) {
       dispatch({
         type: 'GET_MOVIES_LIST',

@@ -1,8 +1,7 @@
-import React, {useState, useCallback} from 'react';
-import {View, TextInput, StyleSheet, TouchableOpacity} from 'react-native';
+import React, {useState} from 'react';
+import {View, TextInput, StyleSheet} from 'react-native';
 
 import useDebounce from '../utils/helpers';
-//import {CloseIcon} from './Icons';
 
 const SearchBar = ({onChange}) => {
   const [searchValue, setSearchValue] = useState('');
@@ -17,13 +16,6 @@ const SearchBar = ({onChange}) => {
         value={searchValue}
         onChangeText={item => setSearchValue(item)}
       />
-      {/*      {searchValue.length > 0 && (
-        <TouchableOpacity
-          style={styles.closeIconWrapper}
-          onPress={handleClearSearch}>
-          <CloseIcon />
-        </TouchableOpacity>
-      )}*/}
     </View>
   );
 };
