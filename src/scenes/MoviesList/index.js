@@ -2,22 +2,22 @@ import React, {useEffect, useContext, useState} from 'react';
 import API from '../../utils/api';
 import {Context} from '../../context/Store';
 import Card from '../../components/Card';
-import {
-  SafeAreaView,
-  StyleSheet,
-  FlatList,
-  StatusBar,
-  Text,
-  View,
-  Button,
-} from 'react-native';
+import {SafeAreaView, FlatList} from 'react-native';
+import styles from '../MoviesList/MoviesList.style';
+import Loading from '../../components/Loading';
+import SearchBar from '../../components/SearchBar';
 
 const MovieListScene = ({navigation}) => {
   const [context, dispatch] = useContext(Context);
   const [moviesList, setMoviesList] = useState([]);
 
   useEffect(() => {
+    getPopularMovies();
+  }, []);
+
+  const getPopularMovies = () => {
     API.get(
+      // todo should be in config api key
       'movie/popular?api_key=8571934db346822c0fb8d3724b254baa&language=en-US&page=1',
     )
       .then(oResp => {
@@ -26,14 +26,37 @@ const MovieListScene = ({navigation}) => {
           // todo
           dispatch({type: 'GET_MOVIES_LIST', payload: results});
           setMoviesList(results);
-          console.log(results);
         }
       })
       .catch(oErr => {
         // Todo
         console.log(oErr);
       });
-  }, []);
+  };
+
+  const onChange = item => {
+    if (item) {
+      return API.get(
+        // todo should be in config api key
+        `search/movie?api_key=8571934db346822c0fb8d3724b254baa&query=${item}&language=en-US&page=1`,
+      )
+        .then(oResp => {
+          const {results} = oResp.data;
+          if (results) {
+            // todo
+            dispatch({type: 'GET_MOVIES_LIST', payload: results});
+            setMoviesList(results);
+            console.log(results);
+          }
+        })
+        .catch(oErr => {
+          console.log(oErr);
+          return [];
+        });
+    } else {
+      getPopularMovies();
+    }
+  };
 
   const renderMovieItem = ({item}) => {
     return (
@@ -46,29 +69,16 @@ const MovieListScene = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <FlatList
-        data={moviesList}
-        renderItem={renderMovieItem}
-        keyExtractor={movie => movie.id}
-      />
+      <SearchBar onChange={onChange} />
+      <Loading visible={false}>
+        <FlatList
+          data={moviesList}
+          renderItem={renderMovieItem}
+          keyExtractor={movie => movie.id}
+        />
+      </Loading>
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
-  },
-  item: {
-    backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  title: {
-    fontSize: 32,
-  },
-});
 
 export default MovieListScene;
