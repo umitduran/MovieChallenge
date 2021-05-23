@@ -1,5 +1,5 @@
 import React, {useEffect, useContext, useState} from 'react';
-import API from '../../utils/api';
+import apiCall from '../../utils/api';
 import {Context} from '../../context/Store';
 import Card from '../../components/Card';
 import {SafeAreaView, FlatList} from 'react-native';
@@ -12,47 +12,35 @@ const MovieListScene = ({navigation}) => {
   const [moviesList, setMoviesList] = useState([]);
 
   useEffect(() => {
-    getPopularMovies();
+    getPopularMovies().then(r => r);
   }, []);
 
-  const getPopularMovies = () => {
-    API.get(
-      // todo should be in config api key
-      'movie/popular?api_key=8571934db346822c0fb8d3724b254baa&language=en-US&page=1',
-    )
-      .then(oResp => {
-        const {results} = oResp.data;
-        if (results) {
-          // todo
-          dispatch({type: 'GET_MOVIES_LIST', payload: results});
-          setMoviesList(results);
-        }
-      })
-      .catch(oErr => {
-        // Todo
-        console.log(oErr);
-      });
+  const getPopularMovies = async () => {
+    const popularMovies = await apiCall({
+      url: 'movie/popular',
+    });
+
+    const {results} = popularMovies.data;
+    if (results) {
+      dispatch({type: 'GET_MOVIES_LIST', payload: results});
+      setMoviesList(results);
+    } else {
+      dispatch({type: 'GET_MOVIES_LIST', payload: []});
+      setMoviesList([]);
+    }
   };
 
-  const onChange = item => {
+  const onChange = async item => {
     if (item) {
-      return API.get(
-        // todo should be in config api key
-        `search/movie?api_key=8571934db346822c0fb8d3724b254baa&query=${item}&language=en-US&page=1`,
-      )
-        .then(oResp => {
-          const {results} = oResp.data;
-          if (results) {
-            // todo
-            dispatch({type: 'GET_MOVIES_LIST', payload: results});
-            setMoviesList(results);
-            console.log(results);
-          }
-        })
-        .catch(oErr => {
-          console.log(oErr);
-          return [];
-        });
+      const filteredMovies = await apiCall({
+        url: 'search/movie',
+        params: {
+          query: item,
+        },
+      });
+      const {results} = filteredMovies.data;
+      dispatch({type: 'GET_MOVIES_LIST', payload: results});
+      setMoviesList(results);
     } else {
       getPopularMovies();
     }

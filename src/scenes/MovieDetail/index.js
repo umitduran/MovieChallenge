@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useContext} from 'react';
 import {ScrollView, View, Image, Text} from 'react-native';
-import API from '../../utils/api';
+import apiCall from '../../utils/api';
 import {Context} from '../../context/Store';
 import styles from './MovieDetail.style';
 import Loading from '../../components/Loading';
@@ -13,20 +13,13 @@ const MovieDetailScene = ({navigation, route}) => {
   const [context, dispatch] = useContext(Context);
   const {movieDetail} = context;
 
-  useEffect(() => {
-    API.get(
-      `movie/${movieId}?api_key=8571934db346822c0fb8d3724b254baa&language=en-US`,
-    )
-      .then(oResp => {
-        // todo
-        dispatch({type: 'SET_MOVIE', payload: oResp.data});
-        setLoading(false);
-      })
-      .catch(oErr => {
-        // Todo
-        console.log(oErr);
-      });
-  });
+  useEffect(async () => {
+    const selectedMovie = await apiCall({
+      url: `movie/${movieId}`,
+    });
+    dispatch({type: 'SET_MOVIE', payload: selectedMovie.data});
+    setLoading(false);
+  }, [movieId, dispatch]);
 
   return (
     <ScrollView style={styles.container}>
