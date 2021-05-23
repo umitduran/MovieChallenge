@@ -6,6 +6,7 @@ import {SafeAreaView, FlatList} from 'react-native';
 import styles from '../MoviesList/MoviesList.style';
 import Loading from '../../components/Loading';
 import SearchBar from '../../components/SearchBar';
+import {orderBy} from 'lodash';
 
 const MovieListScene = ({navigation}) => {
   const [context, dispatch] = useContext(Context);
@@ -22,8 +23,11 @@ const MovieListScene = ({navigation}) => {
 
     const {results} = popularMovies.data;
     if (results) {
-      dispatch({type: 'GET_MOVIES_LIST', payload: results});
-      setMoviesList(results);
+      dispatch({
+        type: 'GET_MOVIES_LIST',
+        payload: orderBy(results, ['vote_average'], ['desc']),
+      });
+      setMoviesList(orderBy(results, ['vote_average'], ['desc']));
     } else {
       dispatch({type: 'GET_MOVIES_LIST', payload: []});
       setMoviesList([]);
@@ -39,8 +43,11 @@ const MovieListScene = ({navigation}) => {
         },
       });
       const {results} = filteredMovies.data;
-      dispatch({type: 'GET_MOVIES_LIST', payload: results});
-      setMoviesList(results);
+      dispatch({
+        type: 'GET_MOVIES_LIST',
+        payload: orderBy(results, ['vote_average'], ['desc']),
+      });
+      setMoviesList(orderBy(results, ['vote_average'], ['desc']));
     } else {
       getPopularMovies();
     }

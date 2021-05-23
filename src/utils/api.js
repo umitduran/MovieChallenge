@@ -2,7 +2,7 @@ import axios from 'axios';
 import Config from 'react-native-config';
 
 const apiCall = async ({url, params}) => {
-  const request = axios({
+  const instance = axios({
     baseURL: 'https://api.themoviedb.org/3/',
     url: url,
     method: 'GET',
@@ -18,9 +18,11 @@ const apiCall = async ({url, params}) => {
     },
   })
     .then(oResp => oResp)
-    .catch(oErr => console.log(oErr));
+    .catch(oErr => {
+      console.log(oErr.toJSON().message);
+    });
 
-  return request;
+  return instance;
 };
 
 export default apiCall;
