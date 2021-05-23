@@ -4,6 +4,7 @@ import apiCall from '../../utils/api';
 import {Context} from '../../context/Store';
 import styles from './MovieDetail.style';
 import Loading from '../../components/Loading';
+import env from 'react-native-config';
 
 const image_url = 'https://image.tmdb.org/t/p/'; //todo should be in config
 

@@ -68,6 +68,7 @@ const MovieListScene = ({navigation}) => {
       <SearchBar onChange={onChange} />
       <Loading visible={false}>
         <FlatList
+          id={'flat-list'}
           data={moviesList}
           renderItem={renderMovieItem}
           keyExtractor={movie => movie.id}
