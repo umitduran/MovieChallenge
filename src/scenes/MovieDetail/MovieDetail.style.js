@@ -1,0 +1,68 @@
+import {StyleSheet} from 'react-native';
+
+export default StyleSheet.create({
+  container: {
+    flex: 3,
+    backgroundColor: '#bbbbbb',
+  },
+  contentInfo: {
+    margin: 10,
+    borderWidth: 0.3,
+    borderStyle: 'solid',
+    backgroundColor: '#bbbbbb',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    borderColor: '#d9ed92',
+  },
+  title: {
+    borderRadius: 5,
+    margin: 5,
+    textAlign: 'center',
+    justifyContent: 'center',
+    padding: 5,
+    color: '#243643',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  info: {
+    textAlign: 'center',
+    justifyContent: 'center',
+    padding: 5,
+    fontSize: 12,
+  },
+  tagline: {
+    borderRadius: 5,
+    margin: 5,
+    textAlign: 'center',
+    justifyContent: 'center',
+    padding: 5,
+    color: '#243643',
+    fontSize: 14,
+  },
+  contentOverview: {
+    margin: 10,
+    height: 200,
+    borderWidth: 0.3,
+    borderStyle: 'solid',
+    backgroundColor: '#bbbbbb',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    borderColor: '#34a0a4',
+  },
+  image: {
+    justifyContent: 'center',
+    marginTop: 10,
+    resizeMode: 'cover',
+    minHeight: 250,
+  },
+  overview: {
+    marginLeft: 10,
+    marginRight: 10,
+    textAlign: 'center',
+    justifyContent: 'center',
+  },
+});

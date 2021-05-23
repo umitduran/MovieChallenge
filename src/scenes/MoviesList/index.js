@@ -1,39 +1,58 @@
 import React, {useEffect, useContext, useState} from 'react';
-import API from '../../utils/api';
 import {Context} from '../../context/Store';
+import {SafeAreaView, FlatList} from 'react-native';
+import apiCall from '../../utils/api';
 import Card from '../../components/Card';
-import {
-  SafeAreaView,
-  StyleSheet,
-  FlatList,
-  StatusBar,
-  Text,
-  View,
-  Button,
-} from 'react-native';
+import styles from '../MoviesList/MoviesList.style';
+import Loading from '../../components/Loading';
+import SearchBar from '../../components/SearchBar';
+import {orderBy} from 'lodash';
 
 const MovieListScene = ({navigation}) => {
   const [context, dispatch] = useContext(Context);
   const [moviesList, setMoviesList] = useState([]);
 
   useEffect(() => {
-    API.get(
-      'movie/popular?api_key=8571934db346822c0fb8d3724b254baa&language=en-US&page=1',
-    )
-      .then(oResp => {
-        const {results} = oResp.data;
-        if (results) {
-          // todo
-          dispatch({type: 'GET_MOVIES_LIST', payload: results});
-          setMoviesList(results);
-          console.log(results);
-        }
-      })
-      .catch(oErr => {
-        // Todo
-        console.log(oErr);
-      });
+    getPopularMovies().then(r => r);
   }, []);
+
+  const getPopularMovies = async () => {
+    const popularMovies = await apiCall({
+      url: 'movie/popular',
+    });
+
+    const {results} = popularMovies.data;
+
+    if (results) {
+      dispatch({
+        type: 'GET_MOVIES_LIST',
+        payload: orderBy(results, ['vote_average'], ['desc']),
+      });
+      setMoviesList(orderBy(results, ['vote_average'], ['desc']));
+    } else {
+      dispatch({type: 'GET_MOVIES_LIST', payload: []});
+      setMoviesList([]);
+    }
+  };
+
+  const onChange = async item => {
+    if (item) {
+      const filteredMovies = await apiCall({
+        url: 'search/movie',
+        params: {
+          query: item,
+        },
+      });
+      const {results} = filteredMovies.data;
+      dispatch({
+        type: 'GET_MOVIES_LIST',
+        payload: orderBy(results, ['vote_average'], ['desc']),
+      });
+      setMoviesList(orderBy(results, ['vote_average'], ['desc']));
+    } else {
+      getPopularMovies();
+    }
+  };
 
   const renderMovieItem = ({item}) => {
     return (
@@ -46,29 +65,16 @@ const MovieListScene = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <FlatList
-        data={moviesList}
-        renderItem={renderMovieItem}
-        keyExtractor={movie => movie.id}
-      />
+      <SearchBar onChange={onChange} />
+      <Loading visible={false}>
+        <FlatList
+          data={moviesList}
+          renderItem={renderMovieItem}
+          keyExtractor={movie => movie.id}
+        />
+      </Loading>
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
-  },
-  item: {
-    backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  title: {
-    fontSize: 32,
-  },
-});
 
 export default MovieListScene;

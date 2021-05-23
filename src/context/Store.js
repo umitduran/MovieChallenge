@@ -4,6 +4,7 @@ import Reducer from './Reducer';
 const initialState = {
   movies: [],
   movieDetail: {},
+  searchValue: '',
   error: null,
 };
 
