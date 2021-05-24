@@ -20,7 +20,7 @@ See the section about [running tests](https://github.com/facebook/jest) for more
 ### `npm ios`
 npm ios Like npm start, but also attempts to open your app in the iOS Simulator if you're on a Mac and have it installed.
 
-# Should be Fixed
+# Should be Fixed && Better
 - env Config 
 - Caching
 - Design
