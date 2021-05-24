@@ -4,7 +4,7 @@ import apiCall from '../../utils/api';
 import {Context} from '../../context/Store';
 import styles from './MovieDetail.style';
 import Loading from '../../components/Loading';
-import env from 'react-native-config';
+import Config from 'react-native-config';
 
 const image_url = 'https://image.tmdb.org/t/p/'; //todo should be in config
 
@@ -20,6 +20,7 @@ const MovieDetailScene = ({navigation, route}) => {
     });
     dispatch({type: 'SET_MOVIE', payload: selectedMovie.data});
     setLoading(false);
+    console.log(Config.MOVIE_DB_IMAGE_URL);
   }, [movieId, dispatch]);
 
   return (
@@ -28,11 +29,11 @@ const MovieDetailScene = ({navigation, route}) => {
         <Image
           style={styles.image}
           source={{
-            uri: `${image_url}w500${movieDetail.poster_path}`,
+            uri: `${Config.MOVIE_DB_IMAGE_URL}w500${movieDetail.poster_path}`,
           }}
         />
         <View style={styles.contentInfo}>
-          <Text style={styles.title}>{movieDetail.title} (2020)</Text>
+          <Text style={styles.title}>{movieDetail.title}</Text>
           <Text style={styles.info}>{movieDetail.original_language}</Text>
           <Text style={styles.info}>{movieDetail.release_date}</Text>
           <Text style={styles.info}>{movieDetail.status}</Text>

@@ -11,6 +11,7 @@ import {orderBy} from 'lodash';
 const MovieListScene = ({navigation}) => {
   const [context, dispatch] = useContext(Context);
   const [moviesList, setMoviesList] = useState([]);
+  const [loading,setLoading] = useState(true);
 
   useEffect(() => {
     getPopularMovies().then(r => r);
@@ -29,9 +30,11 @@ const MovieListScene = ({navigation}) => {
         payload: orderBy(results, ['vote_average'], ['desc']),
       });
       setMoviesList(orderBy(results, ['vote_average'], ['desc']));
+      setLoading(false);
     } else {
       dispatch({type: 'GET_MOVIES_LIST', payload: []});
       setMoviesList([]);
+      setLoading(false);
     }
   };
 
@@ -49,6 +52,7 @@ const MovieListScene = ({navigation}) => {
         payload: orderBy(results, ['vote_average'], ['desc']),
       });
       setMoviesList(orderBy(results, ['vote_average'], ['desc']));
+      setLoading(false);
     } else {
       getPopularMovies();
     }
