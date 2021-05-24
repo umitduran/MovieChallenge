@@ -29,7 +29,7 @@ const MovieDetailScene = ({navigation, route}) => {
         <Image
           style={styles.image}
           source={{
-            uri: `${Config.MOVIE_DB_IMAGE_URL}w500${movieDetail.poster_path}`,
+            uri: `${image_url}w500${movieDetail.poster_path}`,
           }}
         />
         <View style={styles.contentInfo}>
